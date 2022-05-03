@@ -3,7 +3,7 @@ version: '3'
 services:
     laravel.test:
         build:
-            context: ./vendor/laravel/sail/runtimes/8.1
+            context: ./docker/8.1
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
@@ -24,7 +24,7 @@ services:
         depends_on:
             - mysql
             - redis
-            - meilisearch
+#            - meilisearch
             - selenium
     mysql:
         image: "mysql:5.7"

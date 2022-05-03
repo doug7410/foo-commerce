@@ -3,20 +3,11 @@
 namespace Database\Seeders;
 
 
-use App\Models\User;
-
 class UserSeeder extends CsvSeeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        $users = $this->csvToAssociativeArray(__DIR__ . '/../data/users.csv');
-
-        $data = collect($users)->map(function ($user) {
+        $this->insertData(__DIR__ . '/../data/users.csv', 'users', function ($user) {
             return [
                 'id' => $user['id'],
                 'name' => $user['name'],
@@ -34,8 +25,6 @@ class UserSeeder extends CsvSeeder
                 'created_at' => $user['created_at'],
                 'updated_at' => $user['updated_at'],
             ];
-        })->toArray();
-
-        \DB::table('users')->insert($data);
+        });
     }
 }

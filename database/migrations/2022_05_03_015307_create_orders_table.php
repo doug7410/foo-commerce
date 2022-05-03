@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
+            $table->unsignedBigInteger('inventory_id');
+            $table->foreign('inventory_id')->references('id')->on('inventory');
             $table->text('street_address');
             $table->text('apartment');
             $table->text('city');
@@ -30,14 +32,14 @@ return new class extends Migration
             $table->text('payment_ref');
             $table->string('transaction_id');
             $table->integer('payment_amt_cents');
-            $table->integer('ship_charged_cents');
-            $table->integer('ship_cost_cents');
+            $table->integer('ship_charged_cents')->nullable();
+            $table->integer('ship_cost_cents')->nullable();
             $table->integer('subtotal_cents');
             $table->integer('total_cents');
-            $table->text('shipper_name');
+            $table->text('shipper_name')->nullable();
             $table->timestamp('payment_date');
             $table->timestamp('shipped_date')->nullable();
-            $table->text('tracking_number');
+            $table->text('tracking_number')->nullable();
             $table->integer('tax_total_cents');
             $table->timestamps();
         });

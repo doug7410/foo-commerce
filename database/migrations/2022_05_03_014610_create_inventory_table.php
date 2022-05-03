@@ -29,7 +29,6 @@ return new class extends Migration
             $table->double('width');
             $table->double('height');
             $table->text('note');
-            $table->timestamps();
         });
     }
 
