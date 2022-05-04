@@ -21,6 +21,12 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
+            'shop_name' => $this->faker->domainName,
+            'card_brand' => $this->faker->creditCardType,
+            'card_last_four' => $this->faker->randomNumber(4),
+            'shop_domain' => $this->faker->domainName,
+            'is_enabled' => true,
+            'billing_plan' => 'Startup',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ];

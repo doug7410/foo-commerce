@@ -10,7 +10,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link text-white">
+            <a href="{{ route('inventory') }}" class="nav-link text-white">
                 Inventory
             </a>
         </li>

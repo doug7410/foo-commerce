@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h4>This is an item list for {{moduleName}}</h4>
         <div class="item-list">
             <table class="table">
                 <tr>

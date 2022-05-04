@@ -36,6 +36,16 @@ services:
           - "33067:3306"
         networks:
             - sail
+    mysql-test:
+        image: "mysql:5.7"
+        user: "mysql"
+        environment:
+          - MYSQL_ROOT_PASSWORD=root
+          - MYSQL_DATABASE=foo_commerce
+        ports:
+          - "33068:3306"
+        networks:
+            - sail
     redis:
         image: 'redis:alpine'
         ports:

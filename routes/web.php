@@ -23,4 +23,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['middleware' => 'auth'], function (){
     Route::get('/module/{moduleName}', [App\Http\Controllers\ModuleController::class, 'index'])->name('module-index');
+    Route::get('/invetory', [App\Http\Controllers\InventoryController::class, 'index'])->name('inventory');
 });
