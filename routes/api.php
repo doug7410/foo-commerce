@@ -19,7 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/products', [App\Http\Controllers\Api\ProductsController::class, 'index'])->name('products-api');
-    Route::get('/inventory', [App\Http\Controllers\Api\InventoryController::class, 'index'])->name('inventory-api');
+    Route::get('/products', [App\Http\Controllers\Api\ProductsController::class, 'index']);
+    Route::post('/products', [App\Http\Controllers\Api\ProductsController::class, 'store']);
+
+    Route::get('/inventory', [App\Http\Controllers\Api\InventoryController::class, 'index']);
 });
 

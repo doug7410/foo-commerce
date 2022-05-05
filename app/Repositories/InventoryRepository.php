@@ -16,4 +16,10 @@ class InventoryRepository implements RepositoryInterface
             ->with('product')
             ->paginate($paginate);
     }
+
+
+    public function createForUser(User $user, array $record)
+    {
+        // TODO: Implement createForUser() method.
+    }
 }

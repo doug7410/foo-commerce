@@ -24,4 +24,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['middleware' => 'auth'], function (){
     Route::get('/products', [App\Http\Controllers\ProductsController::class, 'index'])->name('products');
     Route::get('/inventory', [App\Http\Controllers\InventoryController::class, 'index'])->name('inventory');
+    Route::get('/orders', [App\Http\Controllers\OrdersController::class, 'index'])->name('orders');
 });

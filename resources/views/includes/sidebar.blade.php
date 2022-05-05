@@ -5,19 +5,19 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="{{ route('products') }}" class="nav-link active" aria-current="page">
+            @component('components.sidebar-link', ['routeName' => 'products'])
                 Products
-            </a>
+            @endcomponent
         </li>
-        <li>
-            <a href="{{ route('inventory') }}" class="nav-link text-white">
+        <li class="nav-item">
+            @component('components.sidebar-link', ['routeName' => 'inventory'])
                 Inventory
-            </a>
+            @endcomponent
         </li>
-        <li>
-            <a href="#" class="nav-link text-white">
+        <li class="nav-item">
+            @component('components.sidebar-link', ['routeName' => 'orders'])
                 Orders
-            </a>
+            @endcomponent
         </li>
     </ul>
     <hr>

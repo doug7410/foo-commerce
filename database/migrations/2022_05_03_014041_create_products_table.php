@@ -19,10 +19,10 @@ return new class extends Migration
             $table->text('description');
             $table->text('style');
             $table->text('brand');
-            $table->string('url');
+            $table->string('url')->nullable();
             $table->string('product_type');
             $table->integer('shipping_price');
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->unsignedBigInteger('admin_id');
             $table->foreign('admin_id')->references('id')->on('users');
             $table->timestamps();

@@ -7,18 +7,14 @@
                 </div>
                 <form class="w-75" @submit.prevent="getResults">
                     <div class="row mb-3">
-                        <div class="col">
-                            <select class="form-select"
-                                    aria-label="Product"
-                                    v-model="filters.product"
-                            >
-                                <option v-for="(product, index) in products"
-                                        :key="index"
-                                        :value="product.id"
-                                >
-                                    {{ product.product_name }}
-                                </option>
-                            </select>
+                        <div class="col col-4">
+                            <multiselect v-model="filters.product"
+                                         :options="products"
+                                         :custom-label="(product) => product.product_name"
+                                         placeholder="Product"
+                                         label="product_name"
+                                         track-by="id"
+                            ></multiselect>
                         </div>
                         <div class="col">
                             <input type="text"
@@ -46,7 +42,6 @@
                                 Clear Filters
                             </button>
                         </div>
-
                     </div>
                 </form>
             </div>
@@ -80,6 +75,7 @@
 
 <script>
     import LaravelVuePagination from 'laravel-vue-pagination'
+    import Multiselect from 'vue-multiselect'
 
     export default {
         name: 'InventoryList',
@@ -123,7 +119,7 @@
                 const formatted = []
 
                 if (this.filters.product) {
-                    formatted.push(['product_id', '=', this.filters.product])
+                    formatted.push(['product_id', '=', this.filters.product.id])
                 }
 
                 if (this.filters.sku) {
@@ -139,14 +135,21 @@
         },
 
         mounted () {
-            this.getResults()
+
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+
             window.axios.get('/api/products').then(res => {
                 this.products = res.data.products
+                this.filters.sku = params.sku
+                this.getResults()
             })
         },
 
         components: {
-            'Pagination': LaravelVuePagination
+            'Pagination': LaravelVuePagination,
+            Multiselect
         }
     }
 </script>

@@ -1,16 +1,17 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Api\Feature;
 
 use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class InventoryApiTest extends TestCase
 {
+
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
@@ -18,7 +19,8 @@ class InventoryApiTest extends TestCase
      */
     public function test_can_get_filtered_list_of_inventory_for_user()
     {
-        /** @var User $user */
+
+
         $user = User::factory()->create();
         $product1 = Product::factory()->create(['admin_id' => $user->id, 'product_name' => 'Awesome Tee Shirt']);
         $product2 = Product::factory()->create(['admin_id' => $user->id, 'product_name' => 'Awesome Hat']);
@@ -26,7 +28,8 @@ class InventoryApiTest extends TestCase
         Inventory::factory()->create(['product_id' => $product2->id, 'sku' => 'efgh']);
         Inventory::factory()->create(['product_id' => $product2->id, 'sku' => 'ijkl']);
 
-        $this->actingAs($user);
+
+
 
         $filters = json_encode([
             ['product_id', '=', $product1->id]
