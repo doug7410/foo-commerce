@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return 'foo commerce';
+    return redirect()->route('home');
 });
 
 Auth::routes();

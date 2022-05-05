@@ -8,16 +8,15 @@ use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
-    public function index(Request $request)
+    public function index(InventoryRepository $repository, Request $request)
     {
-        $repo = new InventoryRepository();
         $filters = $request->input('filters');
 
         if($filters) {
             $filters = json_decode($filters);
         }
 
-        $records = $repo->listForUser(
+        $records = $repository->listForUser(
             auth()->user(),
             $request->input('records_per_page') ?? 25,
             $filters ?? []
