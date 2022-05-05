@@ -55,24 +55,28 @@
                 </div>
             </div>
             <table class="table table-striped table-sm table-hover" v-else>
-                <tr>
-                    <th>Product Name</th>
-                    <th>sku</th>
-                    <th>quantity</th>
-                    <th>color</th>
-                    <th>size</th>
-                    <th>price</th>
-                    <th>cost</th>
-                </tr>
-                <tr v-for="(item, index) in paginatedInventory.data" :key="index">
-                    <td>{{ item.product.product_name }}</td>
-                    <td>{{ item.sku }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.color }}</td>
-                    <td>{{ item.size }}</td>
-                    <td>{{ item.price_cents }}</td>
-                    <td>{{ item.cost_cents }}</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>sku</th>
+                        <th>quantity</th>
+                        <th>color</th>
+                        <th>size</th>
+                        <th>price</th>
+                        <th>cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in paginatedInventory.data" :key="index">
+                        <td>{{ item.product.product_name }}</td>
+                        <td>{{ item.sku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.color }}</td>
+                        <td>{{ item.size }}</td>
+                        <td>{{ item.price_cents }}</td>
+                        <td>{{ item.cost_cents }}</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
