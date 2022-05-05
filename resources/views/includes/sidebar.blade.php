@@ -5,7 +5,7 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="{{ route('module-index', ['moduleName' => 'products']) }}" class="nav-link active" aria-current="page">
+            <a href="{{ route('products') }}" class="nav-link active" aria-current="page">
                 Products
             </a>
         </li>

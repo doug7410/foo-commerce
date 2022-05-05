@@ -1,28 +1,61 @@
 <template>
     <div>
         <div class="card">
-            Total Records: {{laravelData.total}}
+            <div class="card-body">
+                <div class="mb-2">
+                    <span class="fs-4">{{paginatedInventory.total}} <small>Records Shown</small></span>
+                </div>
+                <form class="w-75" @submit.prevent="getResults">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <select class="form-select"
+                                    aria-label="Product"
+                                    v-model="filters.product"
+                            >
+                                <option v-for="(product, index) in products"
+                                        :key="index"
+                                        :value="product.id"
+                                >
+                                    {{ product.product_name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="SKU"
+                                   aria-label="SKU"
+                                   v-model="filters.sku"
+                            >
+                        </div>
+                        <div class="col">
+                            <input type="number"
+                                   class="form-control"
+                                   placeholder="QTY threshold"
+                                   aria-label="QTY threshold"
+                                   v-model="filters.qtyThreshold"
+                            >
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-4">
+                            <button type="submit" class="btn btn-primary me-2">
+                                Apply Filters
+                            </button>
+                            <button class="btn btn-light" @click="clearFilters">
+                                Clear Filters
+                            </button>
+                        </div>
 
-            <select name="" id="" @change="filterByProduct" v-model="productFilter">
-                <option value="">filter by product</option>
-                <option value="87">Girl next door Kilt</option>
-                <option value="115">Flamboyant Belt</option>
-            </select>
-
-            <label for="">SKU filter</label>
-            <input type="text" v-model="skuFilter">
-            <button class="btn" @click="filterBySku">filter by sky</button>
-
-            <label for="">inventory filter</label>
-            <input type="text" v-model="inventoryFilter">
-            <button class="btn" @click="filterByInventory">filter by inventory</button>
+                    </div>
+                </form>
+            </div>
         </div>
         <hr>
-        <Pagination :data="laravelData" @pagination-change-page="getResults" :limit="5"/>
+        <Pagination :data="paginatedInventory" @pagination-change-page="getResults" :limit="5"/>
         <div class="item-list">
             <table class="table">
                 <tr>
-                    <th></th>
                     <th>Product Name</th>
                     <th>sku</th>
                     <th>quantity</th>
@@ -31,8 +64,7 @@
                     <th>price</th>
                     <th>cost</th>
                 </tr>
-                <tr v-for="(item, index) in laravelData.data" :key="index">
-                    <td>{{ index+1 }}</td>
+                <tr v-for="(item, index) in paginatedInventory.data" :key="index">
                     <td>{{ item.product.product_name }}</td>
                     <td>{{ item.sku }}</td>
                     <td>{{ item.quantity }}</td>
@@ -54,58 +86,63 @@
 
         data () {
             return {
-                items: [],
-                laravelData: null,
-                filters: [],
-                productFilter: null,
-                skuFilter: null,
-                inventoryFilter: null,
+                paginatedInventory: {},
+                filters: {
+                    product: null,
+                    sku: null,
+                    qtyThreshold: null
+                },
+                products: []
             }
         },
 
         methods: {
             getResults (page = 1) {
-                const filters = JSON.stringify(this.filters)
                 window.axios.get(`/api/inventory`, {
                     params: {
                         page: page,
-                        filters: filters
+                        filters: this.formattedFilters
                     }
                 }).then(res => {
-                    this.laravelData = res.data
+                    this.paginatedInventory = res.data
                 })
             },
-            filterByProduct () {
-                if (this.productFilter) {
-                    this.filters = [['product_id', '=', this.productFilter]]
-                } else {
-                    this.filters = []
+            clearFilters () {
+                this.filters = {
+                    product: null,
+                    sku: null,
+                    qtyThreshold: null
                 }
 
                 this.getResults()
             },
-            filterBySku () {
-                if(this.skuFilter) {
-                    this.filters = [['sku', '=', this.skuFilter]]
-                } else {
-                    this.filters = []
+        },
+
+        computed: {
+            formattedFilters () {
+                const formatted = []
+
+                if (this.filters.product) {
+                    formatted.push(['product_id', '=', this.filters.product])
                 }
 
-                this.getResults()
-            },
-            filterByInventory(){
-                if(this.inventoryFilter) {
-                    this.filters = [['quantity', '<=', this.inventoryFilter]]
-                } else {
-                    this.filters = []
+                if (this.filters.sku) {
+                    formatted.push(['sku', '=', this.filters.sku])
                 }
 
-                this.getResults()
+                if (this.filters.qtyThreshold) {
+                    formatted.push(['quantity', '<=', this.filters.qtyThreshold])
+                }
+
+                return JSON.stringify(formatted)
             }
         },
 
         mounted () {
             this.getResults()
+            window.axios.get('/api/products').then(res => {
+                this.products = res.data.products
+            })
         },
 
         components: {

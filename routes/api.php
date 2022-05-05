@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/module/{moduleName}', [App\Http\Controllers\Api\ModuleController::class, 'index'])->name('module-api-index');
+    Route::get('/products', [App\Http\Controllers\Api\ProductsController::class, 'index'])->name('products-api');
     Route::get('/inventory', [App\Http\Controllers\Api\InventoryController::class, 'index'])->name('inventory-api');
 });
 
