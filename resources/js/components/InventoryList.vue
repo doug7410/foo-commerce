@@ -49,7 +49,12 @@
         <hr>
         <Pagination :data="paginatedInventory" @pagination-change-page="getResults" :limit="5"/>
         <div class="item-list">
-            <table class="table">
+            <div class="d-flex justify-content-center" v-if="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <table class="table" v-else>
                 <tr>
                     <th>Product Name</th>
                     <th>sku</th>
@@ -88,12 +93,14 @@
                     sku: null,
                     qtyThreshold: null
                 },
-                products: []
+                products: [],
+                loading: false,
             }
         },
 
         methods: {
             getResults (page = 1) {
+                this.loading = true
                 window.axios.get(`/api/inventory`, {
                     params: {
                         page: page,
@@ -101,6 +108,7 @@
                     }
                 }).then(res => {
                     this.paginatedInventory = res.data
+                    this.loading = false
                 })
             },
             clearFilters () {

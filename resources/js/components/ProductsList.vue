@@ -17,7 +17,12 @@
         </div>
         <hr>
         <div class="item-list">
-            <table class="table table-striped table-sm table-hover">
+            <div class="d-flex justify-content-center" v-if="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <table class="table table-striped table-sm table-hover" v-else>
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -53,6 +58,7 @@
                 </tr>
                 </tbody>
             </table>
+
         </div>
         <modal name="product-form" :shift-y="0.1" width="800" :adaptive="true" height="auto">
             <div class="container p-3">
@@ -98,6 +104,7 @@
                 notification: null,
                 currentProduct: null,
                 deleting: null,
+                loading: false,
             }
         },
 
@@ -107,8 +114,10 @@
 
         methods: {
             getProducts () {
+                this.loading = true
                 window.axios.get('/api/products').then(res => {
                     this.products = res.data.products
+                    this.loading = false
                 })
             },
             createNewProduct () {
