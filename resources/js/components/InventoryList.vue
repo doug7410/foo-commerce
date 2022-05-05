@@ -54,7 +54,7 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-            <table class="table" v-else>
+            <table class="table table-striped table-sm table-hover" v-else>
                 <tr>
                     <th>Product Name</th>
                     <th>sku</th>
