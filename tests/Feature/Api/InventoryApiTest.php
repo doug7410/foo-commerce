@@ -20,25 +20,24 @@ class InventoryApiTest extends TestCase
     public function test_can_get_filtered_list_of_inventory_for_user()
     {
 
-
+        /** @var User $user */
         $user = User::factory()->create();
+        $this->actingAs($user);
+
         $product1 = Product::factory()->create(['admin_id' => $user->id, 'product_name' => 'Awesome Tee Shirt']);
         $product2 = Product::factory()->create(['admin_id' => $user->id, 'product_name' => 'Awesome Hat']);
         Inventory::factory()->create(['product_id' => $product1->id, 'sku' => 'abcd']);
         Inventory::factory()->create(['product_id' => $product2->id, 'sku' => 'efgh']);
         Inventory::factory()->create(['product_id' => $product2->id, 'sku' => 'ijkl']);
 
-
-
-
         $filters = json_encode([
             ['product_id', '=', $product1->id]
         ]);
 
-        $response = $this->get('/api/inventory?filters=' . urlencode($filters));
+
+        $response = $this->getJson('/api/inventory?filters=' . urlencode($filters));
 
         $response->assertStatus(200);
-
         $response->assertJsonFragment(['product_name' => 'Awesome Tee Shirt']);
         $response->assertJsonMissing(['product_name' => 'Awesome Hat']);
         $response->assertJsonMissing(['sku' => 'efgh']);

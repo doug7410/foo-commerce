@@ -22,4 +22,15 @@ class InventoryRepository implements RepositoryInterface
     {
         // TODO: Implement createForUser() method.
     }
+
+
+    public function updateForUser(User $user, array $data, int $id)
+    {
+        // TODO: Implement updateForUser() method.
+    }
+
+    public function deleteForUser(User $user, int $id)
+    {
+        // TODO: Implement deleteForUser() method.
+    }
 }

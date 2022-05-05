@@ -21,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/products', [App\Http\Controllers\Api\ProductsController::class, 'index']);
     Route::post('/products', [App\Http\Controllers\Api\ProductsController::class, 'store']);
+    Route::post('/products/{id}', [App\Http\Controllers\Api\ProductsController::class, 'update']);
+    Route::delete('/products/{id}', [App\Http\Controllers\Api\ProductsController::class, 'delete']);
 
     Route::get('/inventory', [App\Http\Controllers\Api\InventoryController::class, 'index']);
 });

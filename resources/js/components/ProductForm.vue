@@ -68,6 +68,12 @@
     export default {
         name: 'ProductForm',
 
+        props: {
+          editProduct: {
+              required: false
+          }
+        },
+
         data () {
             return {
                 product: {
@@ -90,7 +96,8 @@
             },
 
             save () {
-                window.axios.post('/api/products', this.product).then(() => {
+                const url = this.editProduct ? `/api/products/${this.editProduct.id}` : '/api/products'
+                window.axios.post(url, this.product).then(() => {
                     this.status = 'saved'
                     this.$emit('saved', this.product)
                     this.product =  {
@@ -102,9 +109,16 @@
                         shipping_price: null,
                         note: null,
                     }
+                    this.editProduct = null
                 }).catch(error => {
                     this.errors = error.response.data
                 })
+            }
+        },
+
+        created () {
+            if(this.editProduct) {
+                this.product = { ...this.product , ...this.editProduct }
             }
         }
     }

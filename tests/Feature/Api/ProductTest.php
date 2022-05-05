@@ -56,4 +56,48 @@ class ProductTest extends TestCase
         $response->assertJsonFragment(['product_type' => ['The product type field is required.']]);
         $response->assertJsonFragment(['shipping_price' => ['The shipping price field is required.']]);
     }
+
+    public function test_can_edit_a_product()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $product = Product::factory()->create([
+            'product_name' => 'Awesome Shirt',
+            'description' => 'Wackadoo!!',
+            'style' => 'fun',
+            'brand' => 'Foo',
+            'product_type' => 'clothing',
+            'shipping_price' => 1234,
+            'note' => 'foo note',
+            'admin_id' => $user->id,
+        ]);
+
+        $response = $this->postJson("/api/products/{$product->id}", [
+            'product_name' => 'Awesome Shirt',
+            'description' => 'Cheese and Crackers',
+            'style' => 'fun',
+            'brand' => 'Foo',
+            'product_type' => 'clothing',
+            'shipping_price' => 1234,
+            'note' => 'bar note',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertEquals('Cheese and Crackers', $product->fresh()->description);
+        $this->assertEquals('bar note', $product->fresh()->note);
+    }
+
+    public function test_can_delete_a_product()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $product = Product::factory()->create(['admin_id' => $user->id]);
+
+        $response = $this->delete("/api/products/{$product->id}");
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseMissing('products', ['id' => $product-> id]);
+    }
 }
