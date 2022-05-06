@@ -11,7 +11,6 @@ class OrdersController extends Controller
 {
     public function index(OrdersRepository $repository, Request $request)
     {
-
         /** @var User $user */
         $user = auth()->user();
 
@@ -29,10 +28,19 @@ class OrdersController extends Controller
 
         return response()->json([
             'paginated_orders' => $orders,
-            'total_sales' => $repository->totalSalesForUser($user),
-            'average_sale' => $repository->averageSaleForUser($user),
             'filtered_total_sales' => $filters ? $repository->filteredTotalSalesForUser($user, $filters) : null,
             'filtered_average_sale' => $filters ? $repository->filteredAverageSaleForUser($user, $filters) : null,
+        ]);
+    }
+
+    public function salesReport(OrdersRepository $repository)
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        return response()->json([
+            'total_sales' => $repository->totalSalesForUser($user),
+            'average_sale' => $repository->averageSaleForUser($user),
         ]);
     }
 }

@@ -151,8 +151,6 @@
                     }
                 }).then(res => {
                     this.paginatedOrders = res.data.paginated_orders
-                    this.totalSales = res.data.total_sales
-                    this.averageSale = res.data.average_sale
                     this.filteredTotalSales = res.data.filtered_total_sales
                     this.filteredAverageSale = res.data.filtered_average_sale
                     this.loading = false
@@ -169,10 +167,16 @@
         },
 
         mounted () {
-            window.axios.get('/api/products').then(res => {
+            window.axios.get('/api/products?with_trashed=true').then(res => {
                 this.products = res.data.products
-                this.getResults()
             })
+
+            window.axios.get('/api/orders/sales-report').then(res => {
+                this.totalSales = res.data.total_sales
+                this.averageSale = res.data.average_sale
+            })
+
+            this.getResults()
         },
 
         computed: {

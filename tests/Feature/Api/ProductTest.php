@@ -98,6 +98,20 @@ class ProductTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseMissing('products', ['id' => $product-> id]);
+        $this->assertDatabaseMissing('products', ['id' => $product-> id, 'deleted_at' => null]);
+    }
+
+    public function test_can_get_product_list_with_soft_deleted()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $product = Product::factory()->create(['admin_id' => $user->id]);
+        Product::factory()->create(['admin_id' => $user->id]);
+        $this->delete("/api/products/{$product->id}");
+
+        $response = $this->getJson('/api/products?with_deleted=true');
+
+        $this->assertCount(2, $response->json()['products']);
+
     }
 }

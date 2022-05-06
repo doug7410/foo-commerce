@@ -45,4 +45,9 @@ class ProductRepository implements RepositoryInterface
     public function deleteForUser(User $user, int $id) {
         $user->products()->where('id', $id)->delete();
     }
+
+    public function listForUserWithDeleted(User $user)
+    {
+        return $user->products()->withTrashed()->get();
+    }
 }
