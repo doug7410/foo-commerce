@@ -114,4 +114,41 @@ class OrderRepositoryTest extends TestCase
 
         $this->assertEquals(150, $averageSale);
     }
+
+    public function test_order_breakdown_by_status_and_state()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        $product = Product::factory()->create(['admin_id' => $user->id]);
+
+        $shipped = 'shipped';
+        $pending = 'pending';
+        $paid = 'paid';
+
+        Order::factory(2)->create(['product_id' => $product->id, 'state' => 'FL', 'order_status' => $shipped]);
+        Order::factory(3)->create(['product_id' => $product->id, 'state' => 'FL', 'order_status' => $pending]);
+        Order::factory()->create(['product_id' => $product->id, 'state' => 'CA', 'order_status' => $shipped]);
+        Order::factory()->create(['product_id' => $product->id, 'state' => 'NY', 'order_status' => $paid]);
+        Order::factory(4)->create(['product_id' => $product->id, 'state' => 'NY', 'order_status' => $shipped]);
+
+        $repo = new OrdersRepository();
+
+        $breakdown = $repo->orderBreakdownForUser($user);
+
+        $this->assertEquals([
+            'FL' => [
+                $shipped => 2,
+                $pending => 3
+            ],
+            'CA' => [
+                $shipped => 1
+            ],
+            'NY' => [
+                $paid => 1,
+                $shipped => 4
+            ]
+        ], $breakdown);
+
+    }
 }

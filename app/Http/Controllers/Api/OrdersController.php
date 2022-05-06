@@ -41,6 +41,7 @@ class OrdersController extends Controller
         return response()->json([
             'total_sales' => $repository->totalSalesForUser($user),
             'average_sale' => $repository->averageSaleForUser($user),
+            'breakdown' => $repository->orderBreakdownForUser($user),
         ]);
     }
 }

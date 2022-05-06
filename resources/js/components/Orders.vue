@@ -68,7 +68,11 @@
             </div>
         </div>
         <hr>
-        <Pagination :data="paginatedOrders" @pagination-change-page="getResults" :limit="5"/>
+        <div class="d-flex justify-content-between">
+            <Pagination :data="paginatedOrders" @pagination-change-page="getResults" :limit="5"/>
+            <a href="#" @click="$modal.show('order-breakdown')">View order breakdown</a>
+        </div>
+
         <div class="item-list">
             <div class="d-flex justify-content-center" v-if="loading">
                 <div class="spinner-border" role="status">
@@ -114,6 +118,26 @@
                 </tbody>
             </table>
         </div>
+        <modal name="order-breakdown" :shift-y="0.1" width="800" :adaptive="true" height="auto">
+            <div class="row">
+                <div class="col p-3">
+                    <button class="btn btn-close float-end" @click="$modal.hide('order-breakdown')"></button>
+                    <h3 class="text-center">Order Breakdown by State and Status</h3>
+                    <table class="table table-sm mx-4">
+                        <tbody>
+                            <tr v-for="(statuses, state) in orderBreakdown" :key="state">
+                                <th>{{ state }}</th>
+                                <td>
+                                    <span v-for="(count, status) in statuses" :key="status" class="mx-2 d-inline-block">
+                                        {{ status }}: {{count}}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </modal>
     </div>
 </template>
 
@@ -138,6 +162,7 @@
                     product: null,
                     sku: null,
                 },
+                orderBreakdown: null
             }
         },
 
@@ -174,6 +199,7 @@
             window.axios.get('/api/orders/sales-report').then(res => {
                 this.totalSales = res.data.total_sales
                 this.averageSale = res.data.average_sale
+                this.orderBreakdown = res.data.breakdown
             })
 
             this.getResults()

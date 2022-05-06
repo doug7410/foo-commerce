@@ -71,6 +71,27 @@ class OrdersRepository implements RepositoryInterface
         return $query->average('total_cents');
     }
 
+    public function orderBreakdownForUser(User $user) : array
+    {
+        $orders =  $user->orders()->select(['state', 'order_status', 'product_id'])->get();
+
+        $result = [];
+
+        foreach ($orders as $order) {
+            if(isset($result[$order->state])) {
+                if(isset($result[$order->state][$order->order_status])) {
+                    ++$result[$order->state][$order->order_status];
+                } else {
+                    $result[$order->state][$order->order_status] = 1;
+                }
+            } else {
+                $result[$order->state] = [$order->order_status => 1];
+            }
+        }
+
+        return $result;
+    }
+
     public function createForUser(User $user, array $record)
     {
         // TODO: Implement createForUser() method.
