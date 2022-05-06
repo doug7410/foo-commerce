@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->unsignedBigInteger('admin_id');
             $table->foreign('admin_id')->references('id')->on('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
