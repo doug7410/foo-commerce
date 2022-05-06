@@ -73,8 +73,8 @@
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.color }}</td>
                         <td>{{ item.size }}</td>
-                        <td>{{ item.price_cents }}</td>
-                        <td>{{ item.cost_cents }}</td>
+                        <td>{{ item.price_cents | money }}</td>
+                        <td>{{ item.cost_cents | money }}</td>
                     </tr>
                 </tbody>
             </table>

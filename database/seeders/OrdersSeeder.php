@@ -26,7 +26,7 @@ class OrdersSeeder extends CsvSeeder
                 'name' => $record['name'],
                 'order_status' => $record['order_status'],
                 'payment_ref' => $record['payment_ref'],
-                'transaction_id' => $record['transaction_id'],
+                'transaction_id' => $record['transaction_id'] === 'NULL' ? null : $record['transaction_id'],
                 'payment_amt_cents' => $record['payment_amt_cents'],
                 'ship_charged_cents' => $record['ship_charged_cents'] === 'NULL' ? null : $record['ship_charged_cents'],
                 'ship_cost_cents' => $record['ship_cost_cents'] === 'NULL' ? null : $record['ship_cost_cents'],

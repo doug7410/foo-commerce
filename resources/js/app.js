@@ -28,6 +28,14 @@ Vue.use(VModal)
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.filter('number', number => {
+    return new Intl.NumberFormat('en-US').format(number)
+})
+
+Vue.filter('money', cents => {
+    return new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(cents / 100)
+})
+
 const app = new Vue({
     el: '#app',
 });
