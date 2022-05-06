@@ -25,5 +25,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/products/{id}', [App\Http\Controllers\Api\ProductsController::class, 'delete']);
 
     Route::get('/inventory', [App\Http\Controllers\Api\InventoryController::class, 'index']);
+
+    Route::get('/orders', [App\Http\Controllers\Api\OrdersController::class, 'index']);
 });
 
