@@ -14,22 +14,16 @@ class OrdersController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        $filters = $request->input('filters');
-
-        if($filters) {
-            $filters = json_decode($filters, true);
-        }
-
         $orders = $repository->listForUser(
             $user,
             $request->input('records_per_page') ?? 25,
-            $filters ?? []
+            $request->filters
         );
 
         return response()->json([
             'paginated_orders' => $orders,
-            'filtered_total_sales' => $filters ? $repository->filteredTotalSalesForUser($user, $filters) : null,
-            'filtered_average_sale' => $filters ? $repository->filteredAverageSaleForUser($user, $filters) : null,
+            'filtered_total_sales' => $request->filters ? $repository->filteredTotalSalesForUser($user, $request->filters) : null,
+            'filtered_average_sale' => $request->filters ? $repository->filteredAverageSaleForUser($user, $request->filters) : null,
         ]);
     }
 
