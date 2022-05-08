@@ -122,33 +122,54 @@ class OrderRepositoryTest extends TestCase
 
         $product = Product::factory()->create(['admin_id' => $user->id]);
 
-        $shipped = 'shipped';
-        $pending = 'pending';
-        $paid = 'paid';
+        $shipped = 'Shipped';
+        $pending = 'Pending';
+        $paid = 'Paid';
+        $open = 'Open';
+        $fulfilled = 'Fulfulled';
 
-        Order::factory(2)->create(['product_id' => $product->id, 'state' => 'FL', 'order_status' => $shipped]);
+        Order::factory(7)->create(['product_id' => $product->id, 'state' => 'FL', 'order_status' => $open]);
         Order::factory(3)->create(['product_id' => $product->id, 'state' => 'FL', 'order_status' => $pending]);
+        Order::factory(2)->create(['product_id' => $product->id, 'state' => 'FL', 'order_status' => $shipped]);
+        Order::factory(9)->create(['product_id' => $product->id, 'state' => 'FL', 'order_status' => $paid]);
+        Order::factory(10)->create(['product_id' => $product->id, 'state' => 'FL', 'order_status' => $fulfilled]);
+
+        Order::factory(3)->create(['product_id' => $product->id, 'state' => 'CA', 'order_status' => $open]);
+        Order::factory(7)->create(['product_id' => $product->id, 'state' => 'CA', 'order_status' => $pending]);
         Order::factory()->create(['product_id' => $product->id, 'state' => 'CA', 'order_status' => $shipped]);
-        Order::factory()->create(['product_id' => $product->id, 'state' => 'NY', 'order_status' => $paid]);
+
         Order::factory(4)->create(['product_id' => $product->id, 'state' => 'NY', 'order_status' => $shipped]);
+        Order::factory()->create(['product_id' => $product->id, 'state' => 'NY', 'order_status' => $paid]);
 
         $repo = new OrdersRepository();
 
         $breakdown = $repo->orderBreakdownForUser($user);
 
         $this->assertEquals([
-            'FL' => [
-                $shipped => 2,
-                $pending => 3
+            [
+                'state' => 'CA',
+                'open' => '3',
+                'pending' => '7',
+                'shipped' => '1',
+                'paid' => '0',
+                'fulfilled' => '0',
             ],
-            'CA' => [
-                $shipped => 1
+            [
+                'state' => 'FL',
+                'open' => '7',
+                'pending' => '3',
+                'shipped' => '2',
+                'paid' => '9',
+                'fulfilled' => '10',
             ],
-            'NY' => [
-                $paid => 1,
-                $shipped => 4
+            [
+                'state' => 'NY',
+                'open' => '0',
+                'pending' => '0',
+                'shipped' => '4',
+                'paid' => '1',
+                'fulfilled' => '0',
             ]
         ], $breakdown);
-
     }
 }

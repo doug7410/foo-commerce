@@ -23,9 +23,9 @@ class FiltersMiddleware
 
 
         if($request->has('filters') && !$validator->fails()){
-            $request->filters = json_decode($request->input('filters'), true);
+            $request->filters = json_decode($request->input('filters'), true) ?? [];
         } else {
-            $request->filters = null;
+            $request->filters = [];
         }
 
         return $next($request);

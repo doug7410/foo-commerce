@@ -3,15 +3,14 @@
 namespace App\Repositories;
 
 
-use App\Contracts\RepositoryInterface;
 use App\Models\User;
 
-class OrdersRepository implements RepositoryInterface
+class OrdersRepository
 {
 
     public function listForUser(User $user, $paginate = 20, array $filters = [])
     {
-        $query = $user->orders()->with('product')->with('inventory');
+        $query = $user->orders()->with('product')->withTrashedParents()->with('inventory');
 
         if (isset($filters['product_id'])) {
             $query->where('product_id', $filters['product_id']);
@@ -73,37 +72,29 @@ class OrdersRepository implements RepositoryInterface
 
     public function orderBreakdownForUser(User $user) : array
     {
-        $orders =  $user->orders()->select(['state', 'order_status', 'product_id'])->get();
+        $statuses = ['Open', 'Pending', 'Shipped', 'Paid', 'Fulfulled'];
+        $statusesSelect = '';
 
-        $result = [];
-
-        foreach ($orders as $order) {
-            if(isset($result[$order->state])) {
-                if(isset($result[$order->state][$order->order_status])) {
-                    ++$result[$order->state][$order->order_status];
-                } else {
-                    $result[$order->state][$order->order_status] = 1;
-                }
-            } else {
-                $result[$order->state] = [$order->order_status => 1];
-            }
+        foreach ($statuses as $status) {
+            $statusesSelect .= ",SUM(if(order_status = '{$status}', 1, 0)) as {$status}";
         }
 
-        return $result;
-    }
+        $orders = $user->orders()
+            ->selectRaw("state, products.admin_id $statusesSelect ")
+            ->groupBy('state', 'admin_id')
+            ->orderBy('state')
+            ->get()
+            ->map(function ($state) {
+                return [
+                    'state' => $state->state,
+                    'open' => $state->Open,
+                    'pending' => $state->Pending,
+                    'shipped' => $state->Shipped,
+                    'paid' => $state->Paid,
+                    'fulfilled' => $state->Fulfulled,
+                ];
+            });
 
-    public function createForUser(User $user, array $record)
-    {
-        // TODO: Implement createForUser() method.
-    }
-
-    public function updateForUser(User $user, array $data, int $id)
-    {
-        // TODO: Implement updateForUser() method.
-    }
-
-    public function deleteForUser(User $user, int $id)
-    {
-        // TODO: Implement deleteForUser() method.
+        return $orders->toArray();
     }
 }

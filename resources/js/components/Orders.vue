@@ -120,18 +120,29 @@
         </div>
         <modal name="order-breakdown" :shift-y="0.1" width="800" :adaptive="true" height="auto">
             <div class="row">
-                <div class="col p-3">
+                <div class="col pe-5 pt-2 ps-2">
                     <button class="btn btn-close float-end" @click="$modal.hide('order-breakdown')"></button>
                     <h3 class="text-center">Order Breakdown by State and Status</h3>
-                    <table class="table table-sm mx-4">
+                    <table class="table table-sm table-striped table-hover mx-4">
+                        <thead>
+                            <tr>
+                                <th>State</th>
+                                <th>Open</th>
+                                <th>Pending</th>
+                                <th>Shipped</th>
+                                <th>Paid</th>
+                                <th>Fulfilled</th>
+                            </tr>
+
+                        </thead>
                         <tbody>
-                            <tr v-for="(statuses, state) in orderBreakdown" :key="state">
-                                <th>{{ state }}</th>
-                                <td>
-                                    <span v-for="(count, status) in statuses" :key="status" class="mx-2 d-inline-block">
-                                        {{ status }}: {{count}}
-                                    </span>
-                                </td>
+                            <tr v-for="(status, index) in orderBreakdown" :key="index">
+                                <td>{{ status.state }}</td>
+                                <td>{{ status.open }}</td>
+                                <td>{{ status.pending }}</td>
+                                <td>{{ status.shipped }}</td>
+                                <td>{{ status.paid }}</td>
+                                <td>{{ status.fulfilled }}</td>
                             </tr>
                         </tbody>
                     </table>

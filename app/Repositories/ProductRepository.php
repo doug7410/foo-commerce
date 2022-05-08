@@ -8,10 +8,10 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 
-class ProductRepository implements RepositoryInterface
+class ProductRepository
 {
 
-    public function listForUser(User $user, $paginate = 20, array $filters = []): Collection
+    public function listForUser(User $user): Collection
     {
         return $user->products()
             ->with('inventory', function ($query) {
