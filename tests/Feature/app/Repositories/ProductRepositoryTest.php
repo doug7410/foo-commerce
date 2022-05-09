@@ -42,6 +42,8 @@ class ProductRepositoryTest extends TestCase
         /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
+
+        /** @var Product $product */
         $product = Product::factory()->create([
             'description' => 'Wackadoo!!',
             'note' => 'foo note',
@@ -55,23 +57,9 @@ class ProductRepositoryTest extends TestCase
             'note' => 'bar note',
         ];
 
-        $repo->updateForUser($user, $updtedProduct, $product->id);
+        $repo->update($product, $updtedProduct);
 
         $this->assertEquals('Cheese and Crackers', $product->fresh()->description);
         $this->assertEquals('bar note', $product->fresh()->note);
-    }
-
-    public function test_can_not_update_a_product_not_belonging_to_a_user()
-    {
-        /** @var User $user */
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        $product = Product::factory()->create(['note' => 'bar']);
-        $repo = new ProductRepository();
-
-        $repo->updateForUser($user, ['note' => 'foo'], $product->id);
-
-        $this->assertEquals('bar', $product->fresh()->note);
     }
 }

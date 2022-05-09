@@ -2,47 +2,58 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\ProductRequest;
 use App\Models\User;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\DeleteProductRequest;
+use App\Http\Requests\ProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+use App\Models\Product;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 
 
 class ProductsController extends Controller
 {
-    public function index(ProductRepository $repository, Request $request)
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
+    public function index(Request $request)
     {
         /** @var User $user */
         $user = auth()->user();
 
         if ($request->input('with_deleted')) {
-            $items = $repository->listForUserWithDeleted($user);
+            $items = $this->productRepository->listForUserWithDeleted($user);
         } else {
-            $items = $repository->listForUser($user);
+            $items = $this->productRepository->listForUser($user);
         }
 
-
-        return response()->json([
-            'products' => $items,
-        ]);
+        return response()->json(['products' => $items]);
     }
 
-    public function store(ProductRepository $repository, ProductRequest $request)
+    public function store(ProductRequest $request)
     {
-        $repository->createForUser(auth()->user(), $request->all());
+        $this->productRepository->createForUser(auth()->user(), $request->validated());
         return response()->json(['message' => 'Product Created']);
     }
 
-    public function update(ProductRepository $repository, ProductRequest $request, $id)
+    public function update(Product $product, UpdateProductRequest $request)
     {
-        $repository->updateForUser(auth()->user(), $request->validated(), $id);
+        $this->productRepository->update($product, $request->validated());
         return response()->json(['message' => 'Product Updated']);
     }
 
-    public function delete(ProductRepository $repository, $id)
+    public function delete(Product $product, DeleteProductRequest $request)
     {
-        $repository->deleteForUser(auth()->user(), $id);
+        $this->productRepository->delete($product);
         return response()->json(['message' => 'Product Deleted']);
     }
 }

@@ -10,17 +10,32 @@ class OrdersRepository
 
     public function listForUser(User $user, $paginate = 20, array $filters = [])
     {
-        $query = $user->orders()->with('product')->withTrashedParents()->with('inventory');
+        $query = \DB::table('orders')
+            ->join('products', 'products.id', '=', 'orders.product_id')
+            ->join('inventory', 'inventory.id', '=', 'orders.inventory_id')
+            ->where('products.admin_id', $user->id);
 
         if (isset($filters['product_id'])) {
-            $query->where('product_id', $filters['product_id']);
+            $query->where('orders.product_id', $filters['product_id']);
         }
 
         if (isset($filters['sku'])) {
-            $query->whereHas('inventory', function ($query) use ($filters) {
-                return $query->where('sku', $filters['sku']);
-            });
+            $query->where('inventory.sku', $filters['sku']);
         }
+
+        $query->select(
+            'name',
+            'email',
+            'product_name',
+            'sku',
+            'color',
+            'size',
+            'order_status',
+            'total_cents',
+            'transaction_id',
+            'shipper_name',
+            'tracking_number'
+        );
 
         return $query->paginate($paginate);
     }

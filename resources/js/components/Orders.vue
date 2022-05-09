@@ -98,15 +98,15 @@
                 <tr v-for="(order, index) in paginatedOrders.data" :key="index">
                     <td>{{ order.name }}</td>
                     <td>{{ order.email }}</td>
-                    <td>{{ order.product.product_name }}</td>
+                    <td>{{ order.product_name }}</td>
                     <td>
-                        <a :href="`/inventory?sku=${order.inventory.sku}`">
-                            {{ order.inventory.color }}
+                        <a :href="`/inventory?sku=${order.sku}`">
+                            {{ order.color }}
                         </a>
                     </td>
                     <td>
-                        <a :href="`/inventory?sku=${order.inventory.sku}`">
-                            {{ order.inventory.size }}
+                        <a :href="`/inventory?sku=${order.sku}`">
+                            {{ order.size }}
                         </a>
                     </td>
                     <td>{{ order.order_status }}</td>
@@ -203,7 +203,7 @@
         },
 
         mounted () {
-            window.axios.get('/api/products?with_trashed=true').then(res => {
+            window.axios.get('/api/products?with_deleted=true').then(res => {
                 this.products = res.data.products
             })
 

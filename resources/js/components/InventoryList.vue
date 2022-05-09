@@ -152,7 +152,7 @@
                 get: (searchParams, prop) => searchParams.get(prop),
             });
 
-            window.axios.get('/api/products?with_trashed=true').then(res => {
+            window.axios.get('/api/products?with_deleted=true').then(res => {
                 this.products = res.data.products
                 this.filters.sku = params.sku
                 this.getResults()

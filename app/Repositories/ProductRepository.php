@@ -31,22 +31,23 @@ class ProductRepository
             ->get();
     }
 
-    public function createForUser(User $user, array $record)
+    public function createForUser(User $user, array $record): void
     {
         $product = new Product($record);
         $user->products()->save($product);
     }
 
-    public function updateForUser(User $user, array $data, int $id)
+    public function update(Product $product, array $data): void
     {
-        $user->products()->where('id', $id)->update($data);
+        $product->update($data);
     }
 
-    public function deleteForUser(User $user, int $id) {
-        $user->products()->where('id', $id)->delete();
+    public function delete(Product $product): void
+    {
+        $product->delete();
     }
 
-    public function listForUserWithDeleted(User $user)
+    public function listForUserWithDeleted(User $user): Collection
     {
         return $user->products()->withTrashed()->get();
     }

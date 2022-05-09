@@ -7,16 +7,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ProductTest extends TestCase
+class ProductApiTest extends TestCase
 {
 
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_can_create_a_product()
     {
         /** @var User $user */
@@ -88,6 +83,19 @@ class ProductTest extends TestCase
         $this->assertEquals('bar note', $product->fresh()->note);
     }
 
+    public function test_can_not_update_product_if_it_does_not_belong_to_user()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $product = Product::factory()->create();
+        $response = $this->postJson("/api/products/{$product->id}", [
+            'note' => 'bar note',
+        ]);
+
+        $response->assertStatus(403);
+    }
+
     public function test_can_delete_a_product()
     {
         $user = User::factory()->create();
@@ -99,6 +107,19 @@ class ProductTest extends TestCase
         $response->assertStatus(200);
 
         $this->assertDatabaseMissing('products', ['id' => $product-> id, 'deleted_at' => null]);
+    }
+
+    public function test_can_not_delete_a_product_that_does_not_belong_to_the_authorized_user()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $product = Product::factory()->create();
+
+        $response = $this->delete("/api/products/{$product->id}");
+
+        $response->assertStatus(403);
+
+        $this->assertDatabaseHas('products', ['id' => $product-> id, 'deleted_at' => null]);
     }
 
     public function test_can_get_product_list_with_soft_deleted()
