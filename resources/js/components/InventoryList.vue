@@ -68,7 +68,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in paginatedInventory.data" :key="index">
-                        <td>{{ item.product.product_name }}</td>
+                        <td>{{ item.product.product_name }} <span class="small text-danger" v-if="item.product.deleted_at">(deleted)</span></td>
                         <td>{{ item.sku }}</td>
                         <td>{{ item.quantity }}</td>
                         <td>{{ item.color }}</td>

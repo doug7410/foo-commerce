@@ -11,11 +11,24 @@ class InventoryRepository
 
     public function listForUser(User $user, $paginate = 20, array $filters = []): LengthAwarePaginator
     {
-        return $user->inventory()->with(['product' => function($query){
-            //TODO: withTrashed is not working. find a workaround
-            return $query->withTrashed();
-        }])
-            ->where($filters)
+        $query =  $user->inventory()->with(['product' => function($query){
+            return $query->select('product_name', 'deleted_at', 'id')->withTrashed();
+        }]);
+
+        if($filters) {
+            $query->where($filters);
+        }
+
+        return $query->select(
+                'sku',
+                'quantity',
+                'color',
+                'size',
+                'price_cents',
+                'cost_cents',
+                'product_id'
+            )
+            ->withTrashedParents()
             ->paginate($paginate);
     }
 }

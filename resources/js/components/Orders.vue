@@ -98,7 +98,7 @@
                 <tr v-for="(order, index) in paginatedOrders.data" :key="index">
                     <td>{{ order.name }}</td>
                     <td>{{ order.email }}</td>
-                    <td>{{ order.product_name }}</td>
+                    <td>{{ order.product_name }} <span class="small text-danger" v-if="order.product_deleted">(deleted)</span></td>
                     <td>
                         <a :href="`/inventory?sku=${order.sku}`">
                             {{ order.color }}

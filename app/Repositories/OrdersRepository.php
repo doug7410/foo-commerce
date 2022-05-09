@@ -34,7 +34,8 @@ class OrdersRepository
             'total_cents',
             'transaction_id',
             'shipper_name',
-            'tracking_number'
+            'tracking_number',
+            'products.deleted_at as product_deleted'
         );
 
         return $query->paginate($paginate);
