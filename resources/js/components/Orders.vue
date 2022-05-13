@@ -9,15 +9,18 @@
                                 <tbody>
                                 <tr>
                                     <th>Records Shown</th>
-                                    <td>{{paginatedOrders.total | number }}</td>
+                                    <td v-if="loading">loading...</td>
+                                    <td v-else>{{paginatedOrders.total | number }}</td>
                                 </tr>
                                 <tr>
                                     <th>Total Sales</th>
-                                    <td>{{ totalSales | money }}</td>
+                                    <td v-if="loading">loading...</td>
+                                    <td v-else>{{ totalSales | money }}</td>
                                 </tr>
                                 <tr>
                                     <th>Average Sale</th>
-                                    <td>{{ averageSale | money }}</td>
+                                    <td v-if="loading">loading...</td>
+                                    <td v-else>{{ averageSale | money }}</td>
                                 </tr>
                                 <tr v-if="filteredTotalSales">
                                     <th>Filtered Total Sales</th>

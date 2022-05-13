@@ -29,6 +29,12 @@
                     <th>Style</th>
                     <th>Brand</th>
                     <th>Sku's</th>
+                    <th>
+                        <a href="#" @click.prevent="sortByPotentialRevenue">Potential Revenue</a>
+                        <span v-if="filters.sort.potential_revenue">
+                            ({{ filters.sort.potential_revenue }})
+                        </span>
+                    </th>
                     <th></th>
                 </tr>
                 </thead>
@@ -48,6 +54,7 @@
                             {{ item.sku }}
                         </a>
                     </td>
+                    <td>{{ product.potential_revenue | money }}</td>
                     <td>
                         <div>
                             <button type="button" class="btn btn-danger btn-sm" @click="openDeleteModal(product)">
@@ -105,6 +112,9 @@
                 currentProduct: null,
                 deleting: null,
                 loading: false,
+                filters: {
+                    sort: {}
+                }
             }
         },
 
@@ -115,7 +125,11 @@
         methods: {
             getProducts () {
                 this.loading = true
-                window.axios.get('/api/products').then(res => {
+                window.axios.get('/api/products', {
+                    params: {
+                        filters: this.filters
+                    }
+                }).then(res => {
                     this.products = res.data.products
                     this.loading = false
                 })
@@ -151,7 +165,25 @@
                     this.deleting = null
                     this.$modal.hide('delete-product')
                 })
-            }
+            },
+            sortByPotentialRevenue () {
+                if (!this.filters.sort.potential_revenue) { // if we don't have the potential_revenue sort yet
+                    this.filters.sort.potential_revenue = 'desc'
+                    this.getProducts()
+                    return
+                }
+
+                if (this.filters.sort.potential_revenue && this.filters.sort.potential_revenue === 'desc') {
+                    this.filters.sort.potential_revenue = 'asc'
+                    this.getProducts()
+                    return
+                }
+
+                if (this.filters.sort.potential_revenue && this.filters.sort.potential_revenue === 'asc') {
+                    this.filters.sort.potential_revenue = null
+                    this.getProducts()
+                }
+            },
         },
 
         components: {

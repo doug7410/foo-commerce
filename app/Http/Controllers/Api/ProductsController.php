@@ -33,7 +33,7 @@ class ProductsController extends Controller
         if ($request->input('with_deleted')) {
             $items = $this->productRepository->listForUserWithDeleted($user);
         } else {
-            $items = $this->productRepository->listForUser($user);
+            $items = $this->productRepository->listForUser($user, $request->filters);
         }
 
         return response()->json(['products' => $items]);

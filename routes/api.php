@@ -20,12 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/products', [App\Http\Controllers\Api\ProductsController::class, 'index']);
     Route::post('/products', [App\Http\Controllers\Api\ProductsController::class, 'store']);
     Route::post('/products/{product}', [App\Http\Controllers\Api\ProductsController::class, 'update']);
     Route::delete('/products/{product}', [App\Http\Controllers\Api\ProductsController::class, 'delete']);
 
     Route::group(['middleware' => FiltersMiddleware::class], function () {
+        Route::get('/products', [App\Http\Controllers\Api\ProductsController::class, 'index']);
         Route::get('/inventory', [App\Http\Controllers\Api\InventoryController::class, 'index']);
         Route::get('/orders', [App\Http\Controllers\Api\OrdersController::class, 'index']);
     });
