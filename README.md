@@ -1,25 +1,37 @@
 ## Foo Commerce
+This is an example ecommerce app for viewing products, orders and inventory. 
+It uses Laravel and Vue
 
 ### Requirements
-
-- PHP 8.1
-- Node 16
+- PHP 8.0
+- Node 18
 
 ### Local Development with Docker
+This project used Laravel Sail for local development.
 
-1. Run `docker-compose up` . This will start the app container, a mysql container, and a testing 
-mysql container
-2. Run `docker ps` to get the container name. Example output 
-    ``` 
-    CONTAINER ID   IMAGE                               COMMAND                   CREATED         STATUS         PORTS                                               NAMES
-    9e8eb7997e8d   sail-8.1/app                        "start-container"         5 minutes ago   Up 5 minutes   0.0.0.0:8181->80/tcp                                foo-commerce-foo-commerce-1
-    ```
-3. To enter the container, copy the container name and run `docker-exec -it <container-name> bash`
-4. Install PHP and javascript dependencies and build javascript bundle - `composer install` `npm install` `npm run dev`
-5. Migrate and seed the database `php artisan migrate` `php artisan db:seed`
+- Run `composer install` using your local PHP 8.0
+
+- Copy `.env.example` to `.env` 
+
+- Run `./vendor/bin/sail up -d`
+
+_Note: if you get an error about a port already in use update the appropriate port in `.env`. 
+It will be either `FORWARD_DB_PORT` or `APP_PORT`. If you update `APP_PORT` make sure you change
+it on `APP_URL=http://localhost:88` as well._
+
+- Run `./vendor/bin/sail composer install`
+- Run `./vendor/bin/sail npm install`
+- Run `./vendor/bin/sail npm run dev`
+- Run `./vendor/bin/sail artisan migrate`
+- Run `./vendor/bin/sail artisan db:seed`
 
 ### Running Test
-To run the test enter the docker container and run `./vendor/bin/phpunit`
+To run the test `./vendor/bin/sail test`
 
 ### View the site
-After you start up the docker container the site will be running at [http://localhost:8181](http://localhost:8181) 
+You should now be able to view the app at http://localhost:88/login
+If you changed the port just update it in that url.
+
+You can log into the app with this email and password.
+- **email**: larhonda.hovis@foo.com
+- **pass**: cghmpbKXXK 
